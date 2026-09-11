@@ -1,0 +1,14 @@
+{
+  "name": "dsh-session-prep",
+  "description": "Pre-upgrade rewrite of format-v0 session logs so 0.1.5's v0→v1 migrator can open them. Copies only; never mutates the source tree.",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "dsh-session-prep": "./bin/dsh-session-prep.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
