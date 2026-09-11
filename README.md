@@ -24,20 +24,35 @@ This tool **copies** then rewrites. It never writes the source `$DSH_HOME`.
 ## Commands
 
 ```bash
-# read-only: which sessions would block 0.1.5
+# 一键整理（推荐）：拷贝全部会话（含子代理），只改写有问题的，写出中文清单
+bash scripts/prepare.sh
+# 或:
+node bin/dsh-session-prep.mjs prepare --home ~/.dsh --out ~/.dsh/tmp-session-prep --fresh
+
+# Windows 双击 / 命令行:
+scripts\prepare.cmd
+
+# 只读扫描：哪些会话会挡住 0.1.5
 node bin/dsh-session-prep.mjs scan --home ~/.dsh
 
-# copy sessions tree only
+# 只拷 sessions 树
 node bin/dsh-session-prep.mjs copy --home ~/.dsh --out /tmp/dsh-prep
 
-# copy + rewrite into --out
+# 拷贝 + 全部重写（含干净日志也重压 zstd）
 node bin/dsh-session-prep.mjs rewrite --home ~/.dsh --out /tmp/dsh-prep
 
-# one file, in-memory rewrite + official assert if 0.1.5 migrator is on disk
+# 单文件内存改写 + 官方 v0→v1 assert（若找得到迁移器）
 node bin/dsh-session-prep.mjs probe --file /path/to/session.jsonl.zstd
 ```
 
-Point 0.1.5 at `--out` (or copy rewritten logs into an isolated `$DSH_HOME`). Do not replace production logs until `session/page` on 0.1.5 is green for the copies.
+`prepare` 产物：
+
+- `sessions/` — 整理后的日志树（含子代理）
+- `会话清单.md` — 主会话表 + 子代理按父会话分组
+- `重启升级.md` — 停进程、备份、替换、启动 0.1.5 的步骤
+- `session-prep-report.json` — 机器可读报告
+
+重启升级前先看 `重启升级.md`。**不要**在 dsh 还在写日志时替换生产 `sessions/`。
 
 ## Safety
 
